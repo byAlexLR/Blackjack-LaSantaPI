@@ -172,7 +172,6 @@ public class Blackjack {
 
             if (manoJugador.calcularValor() > 21) {
                 System.out.println("¡Te has pasado! El crupier gana.");
-                saldo = 0; // El jugador pierde todo el saldo
                 break;
             }
 
