@@ -117,8 +117,18 @@ public class Blackjack {
         System.out.println("\n--- MENÚ PRINCIPAL ---");
         System.out.println("1. Jugar");
         System.out.println("2. Ver reglas");
-        System.out.println("3. Salir");
+        System.out.println("3. Créditos");
+        System.out.println("4. Salir");
         System.out.print("Selecciona una opción: ");
+    }
+
+    // Método para mostrar los créditos    
+    public static void mostrarCreditos() {
+        System.out.println("\n--- CRÉDITOS ---");
+        System.out.println("Equipo de Desarrollo: LaSanta PI");
+        System.out.println("Integrantes: Aday Perdomo, Alejandro Lorenzo, Bautista Barreto, Larian Scerbet y Matías Ariel");
+        System.out.println("Versión: 1.0");
+        System.out.println("Fecha: 04/02/2025");
     }
 
     // Método para mostrar las reglas
@@ -246,6 +256,9 @@ public class Blackjack {
                     mostrarReglas();
                     break;
                 case 3:
+                    mostrarCreditos();
+                    break;
+                case 4:
                     jugando = false;
                     System.out.println("¡Gracias por jugar!");
                     break;
