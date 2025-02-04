@@ -20,7 +20,7 @@ Para ejecutar este proyecto necesitas:
 ## 🚀 Instalación y Ejecución
 ### 1️⃣ Clonar el repositorio
 ```sh
-git clone https://github.com/tu-usuario/Blackjack-LaSantaPI.git
+git clone https://github.com/byAlexLR/Blackjack-LaSantaPI.git
 cd Blackjack-LaSantaPI
 ```
 
@@ -57,13 +57,6 @@ El código sigue una estructura orientada a objetos con las siguientes clases pr
 - **Mano.java**: Representa la mano del jugador y de la banca, permitiendo sumar valores y determinar el ganador.
 
 Cada una de estas clases está bien organizada para hacer el código más comprensible y fácil de modificar.
-
-## 🤝 Contribuciones
-¡Las contribuciones son bienvenidas! 🚀
-1. Haz un **fork** del repositorio.
-2. Crea una rama con tu mejora: `git checkout -b mi-mejora`.
-3. Sube tus cambios: `git commit -m "Descripción de mejora"`.
-4. Envía un **pull request**.
 
 ## 📄 Licencia
 Este proyecto está bajo la licencia **MIT**. Puedes usarlo libremente, pero sin garantías.
