@@ -37,11 +37,7 @@ mvn exec:java -Dexec.mainClass="org.example.Blackjack"
 ## 📂 Estructura del Proyecto
 ```
 Blackjack-LaSantaPI/
-│── .classpath
-│── .project
 │── README.md  # Documentación del proyecto
-│── .settings/
-│   ├── org.eclipse.core.resources.prefs  # Configuraciones del IDE
 │── bin/  # Archivos compilados
 │   ├── BlackjackGUI.class
 │   ├── Carta.class
