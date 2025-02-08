@@ -51,6 +51,7 @@ Blackjack-LaSantaPI/
 │   ├── Mano.java  # Lógica de la mano del jugador y la banca
 │   ├── Mazo.java  # Mazo de cartas y su gestión
 │   ├── RulesPanel.java  # Panel con las reglas del juego
+│   ├── music.wav  # Música de Fondo
 ```
 
 ## 📜 Explicación del Código
