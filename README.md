@@ -37,15 +37,25 @@ mvn exec:java -Dexec.mainClass="org.example.Blackjack"
 ## 📂 Estructura del Proyecto
 ```
 Blackjack-LaSantaPI/
-│── src/
-│   ├── main/
-│   │   ├── java/org/example/
-│   │   │   ├── Blackjack.java  # Lógica principal del juego
-│   │   │   ├── Carta.java      # Representación de una carta
-│   │   │   ├── Mazo.java       # Mazo de cartas y su gestión
-│   │   │   ├── Mano.java       # Mano del jugador y la banca
-│── pom.xml  # Archivo de configuración de Maven
+│── .classpath
+│── .project
 │── README.md  # Documentación del proyecto
+│── .settings/
+│   ├── org.eclipse.core.resources.prefs  # Configuraciones del IDE
+│── bin/  # Archivos compilados
+│   ├── BlackjackGUI.class
+│   ├── Carta.class
+│   ├── CreditsPanel.class
+│   ├── Mano.class
+│   ├── Mazo.class
+│   ├── RulesPanel.class
+│── src/  # Código fuente del proyecto
+│   ├── BlackjackGUI.java  # Interfaz gráfica del juego
+│   ├── Carta.java  # Representación de una carta
+│   ├── CreditsPanel.java  # Panel de créditos
+│   ├── Mano.java  # Lógica de la mano del jugador y la banca
+│   ├── Mazo.java  # Mazo de cartas y su gestión
+│   ├── RulesPanel.java  # Panel con las reglas del juego
 ```
 
 ## 📜 Explicación del Código
