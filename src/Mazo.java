@@ -28,7 +28,6 @@ public class Mazo {
 
     public Carta repartir() {
         if (cartas.isEmpty()) {
-            System.out.println("El mazo está vacío. Se reinicia automáticamente.");
             reiniciarMazo();
         }
         return cartas.remove(0);

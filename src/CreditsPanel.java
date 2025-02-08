@@ -10,7 +10,7 @@ public class CreditsPanel extends JPanel {
         // Crear un JLabel para las reglas
         String credits = "<html>" +
                 "· <b>Equipo de Desarrollo:</b> LaSanta PI<br>" +
-                "· <b>Integrantes:</b> Aday Perdomo, Alejandro Lorenzo, Bautista Barreto, Larian Scerbet y Matías Ariel<br>" +
+                "· <b>Integrantes:</b> Alejandro Lorenzo, Aday Perdomo, Bautista Barreto, Larian Scerbet y Matías Ariel<br>" +
                 "· <b>Versión:</b> 2.0<br>" +
                 "· <b>Fecha:</b> 08/02/2025<br>" +
                 "</html>";
