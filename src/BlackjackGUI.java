@@ -1,21 +1,56 @@
 import java.awt.*;
+import java.io.File;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.sound.sampled.*;
 import javax.swing.*;
 
 public class BlackjackGUI {
-    private double saldo = 1000; // Saldo inicial
+    private double saldo = 1000;
     private Mazo mazo;
     private Mano manoJugador;
     private Mano manoCrupier;
     private JPanel gamePanel;
-    private JTextArea gameTextArea;
+    private JTextArea jugadorTextArea;
+    private JTextArea crupierTextArea;
     private JTextField apuestaField;
-    private JLabel saldoLabel_1; // Etiqueta para mostrar el saldo actualizado
+    private JLabel saldoLabel_1;
     private double apuesta;
     private JButton hitButton;
     private JButton standButton;
+    private static Clip clip;
+    private static final Logger LOGGER = Logger.getLogger(BlackjackGUI.class.getName());
+
+    public static void playBackgroundMusic(String filePath, int startSeconds) {
+        try {
+            File musicFile = new File(filePath);
+            if (!musicFile.exists()) {
+                LOGGER.log(Level.SEVERE, "El archivo de m\u00fasica no se encontr\u00f3: {0}", filePath);
+                return;
+            }
+
+            AudioInputStream audioStream = AudioSystem.getAudioInputStream(musicFile);
+            clip = AudioSystem.getClip();
+            clip.open(audioStream);
+
+            // Convertir segundos a microsegundos y verificar rango válido
+            long startMicroseconds = startSeconds * 1_000_000L;
+            if (startMicroseconds < clip.getMicrosecondLength()) {
+                clip.setMicrosecondPosition(startMicroseconds);
+            } else {
+                LOGGER.warning("El tiempo de inicio excede la duración de la pista.");
+            }
+
+            clip.loop(Clip.LOOP_CONTINUOUSLY);
+        } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
+            LOGGER.log(Level.SEVERE, "Error al reproducir la música", e);
+        }
+    }
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> new BlackjackGUI().createAndShowGUI());
+        playBackgroundMusic("src/music.wav", 13);
     }
 
     public void createAndShowGUI() {
@@ -42,11 +77,11 @@ public class BlackjackGUI {
         JButton exitButton = new JButton("SALIR");
 
         playButton.addActionListener(e -> {
-            ((CardLayout) panel.getLayout()).show(panel, "JUEGO");
+            ((CardLayout) panel.getLayout()).show(panel, "Juego");
             startGame();
         });
-        rulesButton.addActionListener(e -> ((CardLayout) panel.getLayout()).show(panel, "REGLAS"));
-        creditsButton.addActionListener(e -> ((CardLayout) panel.getLayout()).show(panel, "CRÉDITOS"));
+        rulesButton.addActionListener(e -> ((CardLayout) panel.getLayout()).show(panel, "Reglas"));
+        creditsButton.addActionListener(e -> ((CardLayout) panel.getLayout()).show(panel, "Créditos"));
         exitButton.addActionListener(e -> System.exit(0));
 
         buttonPanel.add(playButton);
@@ -55,7 +90,7 @@ public class BlackjackGUI {
         buttonPanel.add(exitButton);
 
         frame.getContentPane().add(buttonPanel, BorderLayout.SOUTH);
-
+        frame.setLocationRelativeTo(null);
         frame.setVisible(true);
     }
 
@@ -64,10 +99,7 @@ public class BlackjackGUI {
         manoJugador = new Mano();
         manoCrupier = new Mano();
 
-        SwingUtilities.invokeLater(this::actualizarJuego);
-
-        gameTextArea = new JTextArea(10, 30);
-        gameTextArea.setEditable(false);
+        gamePanel.removeAll();
         gamePanel.setLayout(new BorderLayout());
 
         JPanel saldoPanel = new JPanel();
@@ -75,62 +107,66 @@ public class BlackjackGUI {
         saldoLabel_1 = new JLabel(String.valueOf(saldo));
         JLabel lblApuesta = new JLabel("APUESTA:");
         apuestaField = new JTextField(10);
-        
         JButton apostarButton = new JButton("APOSTAR");
         apostarButton.addActionListener(e -> realizarApuesta());
 
-        JPanel centerPanel = new JPanel(new BorderLayout());
-        centerPanel.add(new JScrollPane(gameTextArea));
-
-        JPanel actionPanel = new JPanel();
-        hitButton = new JButton("PEDIR");
-        standButton = new JButton("PLANTARSE");
-
-        // Inicialmente deshabilitar los botones
-        hitButton.setEnabled(false);
-        standButton.setEnabled(false);
-
-        hitButton.addActionListener(e -> pedirCarta());
-        standButton.addActionListener(e -> plantarse());
-
-        actionPanel.add(hitButton);
-        actionPanel.add(standButton);
-        centerPanel.add(actionPanel, BorderLayout.SOUTH);
-
-        saldoPanel.setLayout(new FlowLayout());
         saldoPanel.add(saldoLabel);
         saldoPanel.add(saldoLabel_1);
         saldoPanel.add(lblApuesta);
         saldoPanel.add(apuestaField);
         saldoPanel.add(apostarButton);
-
         gamePanel.add(saldoPanel, BorderLayout.NORTH);
+
+        JPanel centerPanel = new JPanel(new GridLayout(1, 2));
+
+        // Panel del Jugador con título
+        JPanel jugadorPanel = new JPanel(new BorderLayout());
+        jugadorPanel.setBorder(BorderFactory.createTitledBorder("JUGADOR"));
+        jugadorTextArea = new JTextArea(10, 20);
+        jugadorTextArea.setEditable(false);
+        jugadorPanel.add(new JScrollPane(jugadorTextArea), BorderLayout.CENTER);
+
+        // Panel del Crupier con título
+        JPanel crupierPanel = new JPanel(new BorderLayout());
+        crupierPanel.setBorder(BorderFactory.createTitledBorder("CRUPIER"));
+        crupierTextArea = new JTextArea(10, 20);
+        crupierTextArea.setEditable(false);
+        crupierPanel.add(new JScrollPane(crupierTextArea), BorderLayout.CENTER);
+
+        centerPanel.add(jugadorPanel);
+        centerPanel.add(crupierPanel);
         gamePanel.add(centerPanel, BorderLayout.CENTER);
+
+        JPanel actionPanel = new JPanel();
+        hitButton = new JButton("PEDIR");
+        standButton = new JButton("PLANTARSE");
+        hitButton.setEnabled(false);
+        standButton.setEnabled(false);
+        hitButton.addActionListener(e -> pedirCarta());
+        standButton.addActionListener(e -> plantarse());
+        actionPanel.add(hitButton);
+        actionPanel.add(standButton);
+        gamePanel.add(actionPanel, BorderLayout.SOUTH);
 
         gamePanel.revalidate();
         gamePanel.repaint();
-
-        actualizarJuego();
     }
 
     private void realizarApuesta() {
         try {
             apuesta = Double.parseDouble(apuestaField.getText());
             if (apuesta <= 0 || apuesta > saldo) {
-                JOptionPane.showMessageDialog(gamePanel,
-                        "Apuesta no válida. Debes apostar una cantidad mayor que 0 y no superior a tu saldo.");
+                JOptionPane.showMessageDialog(gamePanel, "Apuesta no válida.");
             } else {
                 saldo -= apuesta;
                 saldoLabel_1.setText(String.valueOf(saldo));
                 repartirCartas();
                 actualizarJuego();
-
-                // Habilitar los botones después de una apuesta válida
                 hitButton.setEnabled(true);
                 standButton.setEnabled(true);
             }
         } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(gamePanel, "Por favor ingresa un número válido para la apuesta.");
+            JOptionPane.showMessageDialog(gamePanel, "Ingresa un número válido.");
         }
     }
 
@@ -142,25 +178,17 @@ public class BlackjackGUI {
     }
 
     private void actualizarJuego() {
-        gameTextArea.setText("");
-        gameTextArea.append("\n--- MANO DEL JUGADOR ---\n");
-        mostrarMano(manoJugador);
-        gameTextArea.append("Valor de la mano del jugador: " + manoJugador.calcularValor() + "\n");
+        jugadorTextArea.setText("");
+        mostrarMano(manoJugador, jugadorTextArea);
+        jugadorTextArea.append("Valor: " + manoJugador.calcularValor() + "\n");
 
-        gameTextArea.append("\n--- MANO DEL CRUPIER ---\n");
-        gameTextArea.append("Carta visible del crupier: \n");
-        gameTextArea.append(manoCrupier.getCartas().get(0).toString() + "\n");
-
-        if (manoJugador.calcularValor() > 21) {
-            gameTextArea.append("\n¡Te has pasado! El crupier gana.\n");
-            saldoLabel_1.setText(String.valueOf(saldo));
-            endGame();
-        }
+        crupierTextArea.setText("");
+        crupierTextArea.append("Carta visible: \n" + manoCrupier.getCartas().get(0).toString() + "\n");
     }
 
-    private void mostrarMano(Mano mano) {
+    private void mostrarMano(Mano mano, JTextArea textArea) {
         for (Carta carta : mano.getCartas()) {
-            gameTextArea.append(carta.toString() + "\n");
+            textArea.append(carta.toString() + "\n");
         }
     }
 
@@ -168,52 +196,64 @@ public class BlackjackGUI {
         if (manoJugador.calcularValor() <= 21) {
             manoJugador.agregarCarta(mazo.repartir());
             actualizarJuego();
+            if (manoJugador.calcularValor() > 21) {
+                determinarGanador();
+            }
         }
     }
 
     private void plantarse() {
+        // El crupier juega hasta alcanzar 17 o más
         while (manoCrupier.calcularValor() < 17) {
             manoCrupier.agregarCarta(mazo.repartir());
         }
-
-        gameTextArea.append("\n--- MANO FINAL DEL CRUPIER ---\n");
-        mostrarMano(manoCrupier);
-        gameTextArea.append("Valor de la mano del crupier: " + manoCrupier.calcularValor() + "\n");
-
-        determinarGanador();
-    }
+        
+        // Mostrar todas las cartas del crupier antes de mostrar el resultado final
+        crupierTextArea.setText(""); 
+        mostrarMano(manoCrupier, crupierTextArea);
+        crupierTextArea.append("Valor: " + manoCrupier.calcularValor() + "\n");
+    
+        // Forzar actualización de la UI para mostrar la mano completa del crupier
+        gamePanel.revalidate();
+        gamePanel.repaint();
+    
+        // Retrasar la ejecución para que el jugador vea el resultado
+        Timer timer = new Timer(1000, e -> determinarGanador());
+        timer.setRepeats(false);
+        timer.start();
+    }    
 
     private void determinarGanador() {
-        if (manoCrupier.calcularValor() > 21) {
-            gameTextArea.append("\n¡El crupier se ha pasado! ¡Tú ganas!\n");
-            saldo += apuesta * 2;
-        } else if (manoJugador.calcularValor() > manoCrupier.calcularValor()) {
-            gameTextArea.append("\n¡Tú ganas!\n");
-            saldo += apuesta * 2;
-        } else if (manoJugador.calcularValor() < manoCrupier.calcularValor()) {
-            gameTextArea.append("\nEl crupier gana.\n");
-        } else {
-            gameTextArea.append("\nEs un empate.\n");
-            saldo += apuesta;
-        }
-        saldoLabel_1.setText(String.valueOf(saldo));
-        endGame();
-    }
+        int valorJugador = manoJugador.calcularValor();
+        int valorCrupier = manoCrupier.calcularValor();
 
-    private void endGame() {
+        String mensaje;
+
+        if (valorJugador > 21) {
+            mensaje = "¡Te has pasado! El crupier gana.";
+        } else if (valorCrupier > 21 || valorJugador > valorCrupier) {
+            mensaje = "¡Has ganado!";
+            saldo += apuesta * 2;
+        } else if (valorJugador < valorCrupier) {
+            mensaje = "El crupier gana.";
+        } else {
+            mensaje = "Es un empate.";
+            saldo += apuesta; // Se devuelve la apuesta
+        }
+
+        saldoLabel_1.setText(String.valueOf(saldo));
+        JOptionPane.showMessageDialog(gamePanel, mensaje);
+
         hitButton.setEnabled(false);
         standButton.setEnabled(false);
 
-        int option = JOptionPane.showConfirmDialog(null, "¿Quieres jugar otra ronda?", "Fin de la partida",
-                JOptionPane.YES_NO_OPTION);
-        if (option == JOptionPane.YES_OPTION) {
-            apuestaField.setText("");
-            mazo = new Mazo();
-            manoJugador = new Mano();
-            manoCrupier = new Mano();
-            actualizarJuego();
-        } else {
-            System.exit(0);
-        }
+        reiniciarJuego();
+    }
+
+    private void reiniciarJuego() {
+        apuestaField.setText("");
+        hitButton.setEnabled(false);
+        standButton.setEnabled(false);
+        startGame();
     }
 }

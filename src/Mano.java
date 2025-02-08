@@ -1,12 +1,10 @@
-
-
 import java.util.*;
 
 public class Mano {
-    private List<Carta> cartas;
+    private final List<Carta> cartas; // Lista de cartas en la mano
 
     public Mano() {
-        cartas = new ArrayList<>();
+        this.cartas = new ArrayList<>();
     }
 
     public void agregarCarta(Carta carta) {
@@ -16,32 +14,43 @@ public class Mano {
     public int calcularValor() {
         int valor = 0;
         int ases = 0;
+
         for (Carta carta : cartas) {
             String valorCarta = carta.getValor();
-            if (valorCarta.equals("J") || valorCarta.equals("Q") || valorCarta.equals("K")) {
-                valor += 10;
-            } else if (valorCarta.equals("A")) {
-                ases++;
-                valor += 11;
-            } else {
-                valor += Integer.parseInt(valorCarta);
+            switch (valorCarta) {
+                case "J", "Q", "K" -> valor += 10;
+                case "A" -> {
+                    ases++;
+                    valor += 11;
+                }
+                default -> valor += Integer.parseInt(valorCarta);
             }
         }
+
+        // Ajustar el valor del As si la mano supera 21
         while (valor > 21 && ases > 0) {
             valor -= 10;
             ases--;
         }
+
         return valor;
     }
 
     public List<Carta> getCartas() {
-        return cartas;
+        return new ArrayList<>(cartas); // Devuelve una copia para evitar modificaciones externas
     }
 
-    // Método para mostrar las cartas de la mano
+    // Método para limpiar la mano
+    public void limpiarMano() {
+        cartas.clear();
+    }
+
+    // Método para mostrar todas las cartas en un solo bloque
     public void mostrarCartas() {
+        StringBuilder sb = new StringBuilder();
         for (Carta carta : cartas) {
-            System.out.println(carta);
+            sb.append(carta).append("\n");
         }
+        System.out.println(sb);
     }
 }
