@@ -36,22 +36,23 @@ java -cp bin BlackjackGUI
 ## 📂 Estructura del Proyecto
 ```
 Blackjack-LaSantaPI/
-│── README.md  # Documentación del proyecto
-│── bin/  # Archivos compilados
+│── README.md                # Documentación del proyecto
+│── bin/                      # Archivos compilados
 │   ├── BlackjackGUI.class
 │   ├── Carta.class
 │   ├── CreditsPanel.class
 │   ├── Mano.class
 │   ├── Mazo.class
 │   ├── RulesPanel.class
-│── src/  # Código fuente del proyecto
-│   ├── BlackjackGUI.java  # Interfaz gráfica del juego
-│   ├── Carta.java  # Representación de una carta
-│   ├── CreditsPanel.java  # Panel de créditos
-│   ├── Mano.java  # Lógica de la mano del jugador y la banca
-│   ├── Mazo.java  # Mazo de cartas y su gestión
-│   ├── RulesPanel.java  # Panel con las reglas del juego
-│   ├── music.wav  # Música de Fondo
+│── src/                      # Código fuente del proyecto
+│   ├── music/                # Música del proyecto
+│   │   └── music.wav         # Música de fondo
+│   ├── BlackjackGUI.java     # Interfaz gráfica del juego
+│   ├── Carta.java            # Representación de una carta
+│   ├── CreditsPanel.java     # Panel de créditos
+│   ├── Mano.java             # Lógica de la mano del jugador y la banca
+│   ├── Mazo.java             # Mazo de cartas y su gestión
+│   ├── RulesPanel.java       # Panel con las reglas del juego
 ```
 
 ## 📜 Explicación del Código
