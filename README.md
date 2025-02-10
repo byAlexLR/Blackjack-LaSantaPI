@@ -5,6 +5,8 @@ Este es un juego de **Blackjack** desarrollado en **Java** con una **interfaz gr
 
 El código está diseñado con una estructura clara y modular, utilizando programación orientada a objetos para facilitar la legibilidad y mantenimiento del código.
 
+Presentación: [Blackjack (Metodología Scrum Ágil) - LaSantaPI](https://www.canva.com/design/DAGei2Tg2Yw/v0DXi25yt5pu8jIuSqqTDA/view?utm_content=DAGei2Tg2Yw&utm_campaign=designshare&utm_medium=link2&utm_source=uniquelinks&utlId=h0580eb759c)
+
 ## 🎯 Características
 ✔️ Juego de **Blackjack** con reglas tradicionales.<br>
 ✔️ Implementado en **Java** con una estructura modular.<br>
